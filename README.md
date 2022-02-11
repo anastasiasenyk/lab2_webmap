@@ -1,18 +1,19 @@
 # lab2_webmap
 
-###used libraries:
+### used libraries:
 - argparse, math, folium, pandas (as pd)
 
-###example of map
-######$python main.py 2015 49.83826 -0.02324 'locations_coordinate.csv'
+## example of map
+
+###### $python main.py 2015 49.83826 -0.02324 'locations_coordinate.csv'
 ![](https://user-images.githubusercontent.com/91616572/153593820-6c95ed7f-70ff-42de-8d8e-9f5a3acde0b9.jpg)
 
 
-##argparse
+## argparse
 ![](https://user-images.githubusercontent.com/91616572/153593858-69e6fec1-b6d7-4fc2-b796-b7704d06fe43.jpg)
 
 
-##functions
+## functions
 1) distance
     ![](https://user-images.githubusercontent.com/91616572/153593620-6343471d-9f7c-447a-91b1-347a7d98fd1f.jpg)
     
