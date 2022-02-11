@@ -12,7 +12,6 @@ def distance(row):
     use of the haversinus formula
     :param row: list
     :return: list
-    >>> distance(['4Real',2007,'Peru',-6.8699697,-75.0458515])
     """
     latitude1, longitude1 = row[3] * math.pi/180, row[4] * math.pi / 180
     latitude2 = float(args.latitude) * math.pi/180
@@ -27,7 +26,7 @@ def distance(row):
 def row_lenght(row):
     """
     return a list with an additional element equal to the
-    fabs of the difference between the longitude coordinates
+    module of the difference between the longitude coordinates
     :param row: list
     :return: list
     """
@@ -94,6 +93,7 @@ def map_create():
     create a web map with four layers and
     different labels that correspond to the previous function
     :return: None
+    >>> map_create()
     """
     new_map = folium.Map(location=[args.latitude, args.longitude], zoom_start=3)
 
@@ -112,7 +112,7 @@ def map_create():
                                           icon=folium.Icon(color='purple', fill=True,
                                                            fill_color='purple')))
 
-    film_row = folium.FeatureGroup(name="3 in row")
+    film_row = folium.FeatureGroup(name="films in row")
     for film in in_row():
         film_row.add_child(folium.Marker(location=[film[3], film[4]], popup=film[0],
                                          icon=folium.Icon(color='darkgreen', fill=True,
