@@ -7,7 +7,10 @@
 
 ###### $python main.py 2015 49.83826 -0.02324 'locations_coordinate.csv'
 ![](https://user-images.githubusercontent.com/91616572/153593820-6c95ed7f-70ff-42de-8d8e-9f5a3acde0b9.jpg)
-
+- red circle - coordinates (49.83826, -0.02324)
+- pink icons - the nearest 5 films of all time
+- green icons - 10 films with the smallest deviation from the longitude coordinate
+- orange icons - the nearest 10 films for a 2015 year
 
 ## argparse
 ![](https://user-images.githubusercontent.com/91616572/153593858-69e6fec1-b6d7-4fc2-b796-b7704d06fe43.jpg)
