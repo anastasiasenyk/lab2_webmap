@@ -3,18 +3,27 @@ import folium
 import pandas as pd
 import argparse
 import math
+
+
 # python main.py 2017 49.83826 24.02324 'locations_coordinate.csv'
 
 
 def distance(row):
-    latitude1, longitude1 = row[3], row[4]
-    latitude2 = float(args.latitude)
-    longitude2 = float(args.longitude)
-    pre_dist = (math.sin((latitude2-latitude1)/2))**2 +\
-               ((math.sin((longitude2-longitude1))/2)**2)*math.cos(latitude2)*math.cos(latitude1)
+    latitude1, longitude1 = row[3] * math.pi / 180, row[4] * math.pi / 180
+    latitude2 = float(args.latitude) * math.pi / 180
+    longitude2 = float(args.longitude) * math.pi / 180
+    pre_dist = (math.sin((latitude2 - latitude1) / 2)) ** 2 + \
+               ((math.sin((longitude2 - longitude1)) / 2) ** 2) * math.cos(latitude2) * math.cos(latitude1)
     dist = 6371 * 2 * math.atan2(math.sqrt(pre_dist), math.sqrt(1 - pre_dist))
-    row[3] = dist
-    return row[:4]
+    row.append(dist)
+    return row
+
+
+def row_lenght(row):
+    longitude1 = float(row[4])
+    short_dist = math.fabs(longitude1 - float(args.longitude))
+    row.append(short_dist)
+    return row
 
 
 def find_10_films():
@@ -26,21 +35,58 @@ def find_10_films():
 
     series_film = pd.Series(data_films)
     series_film = series_film.apply(distance)
-    series_film = sorted(series_film, key=lambda x: x[3])
+    series_film = sorted(series_film, key=lambda row: row[5])
     return series_film[:10]
 
-# def top_5_films():
-#
+
+def top_5_films():
+    file_films = pd.read_csv(args.path_to_dataset)
+    data_films = []
+    for index, row in file_films.iterrows():
+        data_films.append(list(row)[1:])
+    series_film = pd.Series(data_films)
+    series_film = series_film.apply(distance)
+    series_film = sorted(series_film, key=lambda row: row[5])
+    return series_film[:5]
+
+
+def in_row():
+    file_films = pd.read_csv(args.path_to_dataset)
+    data_films = []
+    for index, row in file_films.iterrows():
+        if row[2] > int(args.year):
+            data_films.append(list(row)[1:])
+    series_film = pd.Series(data_films)
+    series_film = series_film.apply(row_lenght)
+    series_film = sorted(series_film, key=lambda row: row[5])
+    return series_film[:10]
 
 
 def map_create():
-    map = folium.Map(location=[49.817545, 24.023932],
-                      zoom_start=17)
-    map.save('Map_web.html')
+    map = folium.Map(location=[args.latitude, args.longitude], zoom_start=3)
 
-    map.add_child(folium.Marker(location=[49.817545, 24.023932],
-                                popup="Хіба я тут!",
-                                icon=folium.Icon()))
+    folium.CircleMarker(location=[args.latitude, args.longitude], radius=4, popup='I am here!',
+                        color='red', fill=True, fill_color='red').add_to(map)
+
+    film_label = folium.FeatureGroup(name="top 10 for year")
+    for film in find_10_films():
+        film_label.add_child(folium.Marker(location=[film[3], film[4]], popup=film[0],
+                                           icon=folium.Icon(color='orange', fill=True, fill_color='orange')))
+
+    film_near = folium.FeatureGroup(name="nearest 5 for all time")
+    for film in top_5_films():
+        film_near.add_child(folium.Marker(location=[film[3], film[4]], popup=film[0],
+                                           icon=folium.Icon(color='purple', fill=True, fill_color='purple')))
+
+    film_row = folium.FeatureGroup(name="3 in row")
+    for film in in_row():
+        film_row.add_child(folium.Marker(location=[film[3], film[4]], popup=film[0],
+                                          icon=folium.Icon(color='darkgreen', fill=True, fill_color='darkgreen')))
+    map.add_child(film_row)
+    map.add_child(film_near)
+    map.add_child(film_label)
+    map.add_child(folium.LayerControl())
+    map.save('Map_web.html')
 
 
 if __name__ == '__main__':
@@ -51,6 +97,6 @@ if __name__ == '__main__':
         parser.add_argument('longitude', help='longitude (coordinates)')
         parser.add_argument('path_to_dataset', help='path to data_file with films')
         args = parser.parse_args()
-        print(find_10_films())
+        map_create()
     except Exception as e:
         print(e)
