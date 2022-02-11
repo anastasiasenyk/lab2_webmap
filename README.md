@@ -11,6 +11,7 @@
 - pink icons - the nearest 5 films of all time
 - green icons - 10 films with the smallest deviation from the longitude coordinate
 - orange icons - the nearest 10 films for a 2015 year
+P.S. some icons could be the same for several groups
 
 ## argparse
 ![](https://user-images.githubusercontent.com/91616572/153593858-69e6fec1-b6d7-4fc2-b796-b7704d06fe43.jpg)
